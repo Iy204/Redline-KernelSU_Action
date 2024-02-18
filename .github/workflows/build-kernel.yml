@@ -7,15 +7,15 @@ on:
       KERNEL_SOURCE:
         description: 'Kernel Source'
         required: true
-        default: 'Rohail33/RealKing-kernel-SM8250'
+        default: 'VoidUI-Devices/kernel_xiaomi_sm8250'
       KERNEL_SOURCE_BRANCH:
         description: 'Branch'
         required: true
-        default: 'munch-mi'
+        default: 'aosp-13'
       KERNEL_DEFCONFIG:
         description: 'Defconfig'
         required: true
-        default: 'vendor/munch_defconfig'
+        default: 'alioth_defconfig'
       TARGET_ARCH:
         description: 'Target ARCH'
         required: true
@@ -23,11 +23,11 @@ on:
       KERNEL_FILE:
         description: 'Your kernel out image name'
         required: true
-        default: 'Image.gz'
+        default: 'Image'
       CLANG_URL:
         description: 'Clang URL'
         required: true
-        default: 'https://github.com/ZyCromerZ/Clang/releases/download/17.0.0-20230217-release/Clang-17.0.0-20230217.tar.gz'
+        default: 'https://github.com/ZyCromerZ/Clang/releases/download/19.0.0git-20240217-release/Clang-19.0.0git-20240217.tar.gz'
       BUILD_EXTRA_COMMAND:
         description: 'Extra build commands(e.g. LLVM=1 LLVM_IAS=1)'
         required: false
@@ -99,12 +99,12 @@ jobs:
             echo "CONFIG_KPROBES=y" >> arch/${{ env.TARGET_ARCH }}/configs/${{ env.KERNEL_DEFCONFIG }}
             echo "CONFIG_HAVE_KPROBES=y" >> arch/${{ env.TARGET_ARCH }}/configs/${{ env.KERNEL_DEFCONFIG }}
             echo "CONFIG_KPROBE_EVENTS=y" >> arch/${{ env.TARGET_ARCH }}/configs/${{ env.KERNEL_DEFCONFIG }}
-            curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
+            curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s main
             echo "UPLOADNAME=-KernelSU" >> $GITHUB_ENV
         else
             if git apply --check ../KernelSU.patch ; then
                 git apply ../KernelSU.patch
-                curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
+                curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s main
                 echo "UPLOADNAME=-KernelSU" >> $GITHUB_ENV
             else
                 echo "KernelSU Patching failed"
